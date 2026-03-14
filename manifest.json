@@ -1,12 +1,12 @@
 {
   "name": "منظومة الكفاءة الطبية",
-  "short_name": "الكفاءة الطبية",
-  "start_url": "/medical-system/",
-  "scope": "/medical-system/",
+  "short_name": "MedOps",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#0f766e",
-  "orientation": "portrait",
+  "description": "منظومة الإدارة الميدانية للمفارز الطبية مع دعم العمل أونلاين وأوفلاين.",
   "icons": [
     {
       "src": "icons/icon-192.png",
