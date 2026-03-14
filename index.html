@@ -69,12 +69,15 @@
       #pwaInstallBtn{position:fixed;left:16px;bottom:16px;z-index:9999;background:#0f766e;color:#fff;border:none;border-radius:999px;padding:12px 16px;font-family:'Cairo',sans-serif;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,.18);cursor:pointer;display:none}
       #pwaInstallBtn:hover{filter:brightness(.96)}
       #offlineBadge{position:fixed;right:16px;bottom:16px;z-index:9998;background:#111827;color:#fff;border-radius:12px;padding:10px 14px;font-family:'Cairo',sans-serif;font-size:13px;display:none;box-shadow:0 10px 25px rgba(0,0,0,.18)}
+      #iosInstallHint{position:fixed;left:16px;right:16px;bottom:76px;z-index:9997;background:#ffffff;color:#0f172a;border:1px solid #d1d5db;border-radius:16px;padding:14px 16px;font-family:'Cairo',sans-serif;font-size:14px;line-height:1.8;display:none;box-shadow:0 12px 30px rgba(0,0,0,.12)}
+      #iosInstallHint button{margin-top:8px;background:#0f766e;color:#fff;border:none;border-radius:10px;padding:8px 12px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer}
     </style>
 
 </head>
 <body>
 <button id="pwaInstallBtn" type="button">تثبيت التطبيق</button>
 <div id="offlineBadge">أنت الآن تعمل بدون إنترنت</div>
+<div id="iosInstallHint">للتثبيت على iPhone أو iPad: افتح الموقع من Safari ثم اضغط زر المشاركة وبعدها اختر <b>Add to Home Screen</b>.<br><button type="button" id="closeIosHint">حسناً</button></div>
 
     <div id="root"></div>
 
@@ -2465,10 +2468,21 @@
   let deferredPrompt = null;
   const installBtn = document.getElementById('pwaInstallBtn');
   const offlineBadge = document.getElementById('offlineBadge');
+  const iosInstallHint = document.getElementById('iosInstallHint');
+  const closeIosHint = document.getElementById('closeIosHint');
+
+  const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
   function updateOfflineState() {
     if (!offlineBadge) return;
     offlineBadge.style.display = navigator.onLine ? 'none' : 'block';
+  }
+
+  function showIOSHint() {
+    if (iosInstallHint && isIOS && !isStandalone) {
+      iosInstallHint.style.display = 'block';
+    }
   }
 
   window.addEventListener('online', updateOfflineState);
@@ -2490,17 +2504,29 @@
   window.addEventListener('appinstalled', () => {
     deferredPrompt = null;
     if (installBtn) installBtn.style.display = 'none';
+    if (iosInstallHint) iosInstallHint.style.display = 'none';
   });
+
+  if (closeIosHint) {
+    closeIosHint.addEventListener('click', () => {
+      iosInstallHint.style.display = 'none';
+    });
+  }
 
   if (installBtn) {
     installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      installBtn.style.display = 'none';
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        installBtn.style.display = 'none';
+      } else {
+        showIOSHint();
+      }
     });
   }
+
+  showIOSHint();
 })();
 </script>
 
