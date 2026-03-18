@@ -46,11 +46,10 @@
 
     <style>
         body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
-        body.public-page { overflow: auto !important; }
+        body.public-page { overflow: auto !important; height: auto !important; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        @keyframes slideUpModal { from { opacity:0; transform:translateY(40px) scale(.97); } to { opacity:1; transform:translateY(0) scale(1); } }
-        @keyframes tpFadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes slideUpModal { from{opacity:0;transform:translateY(40px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
         
         /* === كود سحري لطباعة الألوان بشكل مثالي === */
         * {
@@ -2472,14 +2471,13 @@
                             onClose={() => setShowTeamProfileModal(false)}
                         />
                     )}
-
                 </div>
             );
         };
 
-        /* ══════════════════════════════════════════════════════════════
-           TeamProfileModal — مودال تعديل بيانات الصفحة العامة
-        ══════════════════════════════════════════════════════════════ */
+        /* ══════════════════════════════════════════════════════════
+           TeamProfileModal — مودال تعديل الصفحة العامة
+        ══════════════════════════════════════════════════════════ */
         const TeamProfileModal = ({ teamId, teamName, onClose }) => {
             const EMPTY = { whoWeAre:'', vision:'', goals:'', contactPhone:'', contactEmail:'', contactTelegram:'', contactWhatsapp:'', contactOther:'' };
             const [form, setForm]       = useState(EMPTY);
@@ -2488,47 +2486,45 @@
             const [saved, setSaved]     = useState(false);
             const [copied, setCopied]   = useState(false);
             const [tab, setTab]         = useState('info');
-
             const pageUrl = `${location.origin}${location.pathname}?team=${teamId}`;
 
             useEffect(() => {
                 if (!teamId) { setLoading(false); return; }
                 const load = async () => {
                     let t = 0;
-                    while ((!window.fb || !window.fb.db) && t++ < 30) await new Promise(r => setTimeout(r, 200));
+                    while ((!window.fb||!window.fb.db) && t++<30) await new Promise(r=>setTimeout(r,200));
                     try {
-                        const snap = await window.fb.getDoc(window.fb.doc(window.fb.db, 'teamProfiles', teamId));
-                        if (snap.exists()) setForm({ ...EMPTY, ...snap.data() });
-                    } catch(e) { console.error(e); }
+                        const snap = await window.fb.getDoc(window.fb.doc(window.fb.db,'teamProfiles',teamId));
+                        if (snap.exists()) setForm({...EMPTY,...snap.data()});
+                    } catch(e){console.error(e);}
                     setLoading(false);
                 };
                 load();
             }, [teamId]);
 
-            const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+            const set = (k,v) => setForm(f=>({...f,[k]:v}));
 
             const handleSave = async () => {
                 if (!teamId) return;
                 setSaving(true);
                 try {
-                    await window.fb.setDoc(window.fb.doc(window.fb.db, 'teamProfiles', teamId), {
-                        ...form, teamName: teamName || 'الفريق الطبي',
-                        updatedAt: window.fb.serverTimestamp()
+                    await window.fb.setDoc(window.fb.doc(window.fb.db,'teamProfiles',teamId),{
+                        ...form, teamName: teamName||'الفريق الطبي', updatedAt: window.fb.serverTimestamp()
                     });
-                    setSaved(true); setTimeout(() => setSaved(false), 3000);
-                } catch(e) { alert('خطأ في الحفظ'); }
+                    setSaved(true); setTimeout(()=>setSaved(false),3000);
+                } catch(e){ alert('خطأ في الحفظ'); }
                 setSaving(false);
             };
 
             const copyLink = () => {
-                navigator.clipboard.writeText(pageUrl).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2200); });
+                navigator.clipboard.writeText(pageUrl).then(()=>{ setCopied(true); setTimeout(()=>setCopied(false),2200); });
             };
 
             const inp = "w-full border border-slate-200 rounded-xl px-4 py-3 font-bold text-sm text-slate-800 bg-slate-50 outline-none focus:border-teal-500 focus:bg-white transition-colors";
 
             return (
                 <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/70 backdrop-blur-sm"
-                     onClick={e => e.target === e.currentTarget && onClose()}>
+                     onClick={e=>e.target===e.currentTarget&&onClose()}>
                     <div className="bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col"
                          style={{maxHeight:'92vh',animation:'slideUpModal .3s cubic-bezier(.16,1,.3,1) both'}}>
 
@@ -2552,18 +2548,17 @@
                             </p>
                             <div className="flex items-center gap-2 bg-teal-50 border border-dashed border-teal-300 rounded-2xl px-4 py-3">
                                 <span className="flex-1 text-xs font-bold text-teal-700 break-all" style={{direction:'ltr',textAlign:'left'}}>{pageUrl}</span>
-                                <button onClick={copyLink} className={`shrink-0 text-white text-xs font-black px-4 py-2 rounded-xl transition-colors flex items-center gap-1.5 ${copied ? 'bg-emerald-600' : 'bg-teal-600 hover:bg-teal-700'}`}>
-                                    <i className={`fa-solid ${copied ? 'fa-check' : 'fa-copy'}`}></i>
-                                    {copied ? 'تم!' : 'نسخ'}
+                                <button onClick={copyLink} className={`shrink-0 text-white text-xs font-black px-4 py-2 rounded-xl transition-colors flex items-center gap-1.5 ${copied?'bg-emerald-600':'bg-teal-600 hover:bg-teal-700'}`}>
+                                    <i className={`fa-solid ${copied?'fa-check':'fa-copy'}`}></i>{copied?'تم!':'نسخ'}
                                 </button>
                             </div>
                         </div>
 
                         <div className="px-5 pb-3 flex-shrink-0">
                             <div className="flex bg-slate-100 rounded-xl p-1 gap-1">
-                                {[{id:'info',label:'بيانات المفرزة',icon:'fa-circle-info'},{id:'contact',label:'معلومات التواصل',icon:'fa-address-book'}].map(t => (
-                                    <button key={t.id} onClick={() => setTab(t.id)}
-                                        className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-black transition-all ${tab===t.id ? 'bg-white text-teal-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
+                                {[{id:'info',label:'بيانات المفرزة',icon:'fa-circle-info'},{id:'contact',label:'معلومات التواصل',icon:'fa-address-book'}].map(t=>(
+                                    <button key={t.id} onClick={()=>setTab(t.id)}
+                                        className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-black transition-all ${tab===t.id?'bg-white text-teal-700 shadow-sm':'text-slate-500 hover:text-slate-700'}`}>
                                         <i className={`fa-solid ${t.icon}`}></i>{t.label}
                                     </button>
                                 ))}
@@ -2576,43 +2571,43 @@
                                     <i className="fa-solid fa-stethoscope text-teal-400 text-3xl animate-pulse"></i>
                                     <p className="text-sm font-bold text-slate-400">جاري التحميل…</p>
                                 </div>
-                            ) : tab === 'info' ? (
+                            ) : tab==='info' ? (
                                 <React.Fragment>
                                     <div>
                                         <label className="text-xs font-black text-slate-600 flex items-center gap-1.5 mb-1.5"><i className="fa-solid fa-id-card-clip text-teal-500"></i> من نحن</label>
-                                        <textarea className={inp + " resize-none"} style={{fontFamily:"'Cairo',sans-serif",minHeight:90}} rows={4}
-                                            placeholder="صف مفرزتك — مهمتها، كوادرها، موقعها الجغرافي…"
-                                            value={form.whoWeAre} onChange={e => set('whoWeAre', e.target.value)} />
+                                        <textarea className={inp+" resize-none"} style={{fontFamily:"'Cairo',sans-serif",minHeight:90}} rows={4}
+                                            placeholder="صف مفرزتك — مهمتها، كوادرها، موقعها…"
+                                            value={form.whoWeAre} onChange={e=>set('whoWeAre',e.target.value)}/>
                                     </div>
                                     <div>
                                         <label className="text-xs font-black text-slate-600 flex items-center gap-1.5 mb-1.5"><i className="fa-solid fa-eye text-blue-500"></i> رؤيتنا</label>
-                                        <textarea className={inp + " resize-none"} style={{fontFamily:"'Cairo',sans-serif",minHeight:75}} rows={3}
-                                            placeholder="ما الذي تسعى مفرزتك لتحقيقه مستقبلاً؟"
-                                            value={form.vision} onChange={e => set('vision', e.target.value)} />
+                                        <textarea className={inp+" resize-none"} style={{fontFamily:"'Cairo',sans-serif",minHeight:75}} rows={3}
+                                            placeholder="ما الذي تسعى مفرزتك لتحقيقه؟"
+                                            value={form.vision} onChange={e=>set('vision',e.target.value)}/>
                                     </div>
                                     <div>
                                         <label className="text-xs font-black text-slate-600 flex items-center gap-1.5 mb-1.5"><i className="fa-solid fa-bullseye text-amber-500"></i> أهدافنا</label>
-                                        <p className="text-[10px] font-bold text-slate-400 mb-1.5">كل هدف في سطر مستقل ← تظهر كقائمة منظمة</p>
-                                        <textarea className={inp + " resize-none"} style={{fontFamily:"'Cairo',sans-serif",minHeight:105}} rows={5}
+                                        <p className="text-[10px] font-bold text-slate-400 mb-1.5">كل هدف في سطر مستقل</p>
+                                        <textarea className={inp+" resize-none"} style={{fontFamily:"'Cairo',sans-serif",minHeight:105}} rows={5}
                                             placeholder={"تقديم الرعاية الإسعافية الأولية\nتدريب الكوادر الطبية\nتوفير الأدوية للمناطق النائية"}
-                                            value={form.goals} onChange={e => set('goals', e.target.value)} />
+                                            value={form.goals} onChange={e=>set('goals',e.target.value)}/>
                                     </div>
                                 </React.Fragment>
                             ) : (
                                 <React.Fragment>
                                     {[
-                                        {k:'contactPhone',    icon:'fa-phone',              color:'text-green-500',  label:'رقم الهاتف',       ph:'+964 770 000 0000'},
-                                        {k:'contactTelegram', icon:'fa-brands fa-telegram', color:'text-sky-500',    label:'تيليغرام',         ph:'@YourChannel'},
-                                        {k:'contactWhatsapp', icon:'fa-brands fa-whatsapp', color:'text-green-600',  label:'واتساب',           ph:'+964 770 000 0000'},
-                                        {k:'contactEmail',    icon:'fa-envelope',           color:'text-blue-500',   label:'البريد الإلكتروني',ph:'team@example.com'},
-                                        {k:'contactOther',    icon:'fa-link',               color:'text-purple-500', label:'رابط آخر / موقع',  ph:'https://example.com'},
-                                    ].map(f => (
+                                        {k:'contactPhone',    icon:'fa-phone',              color:'text-green-500',  label:'رقم الهاتف',        ph:'+964 770 000 0000'},
+                                        {k:'contactTelegram', icon:'fa-brands fa-telegram', color:'text-sky-500',    label:'تيليغرام',          ph:'@YourChannel'},
+                                        {k:'contactWhatsapp', icon:'fa-brands fa-whatsapp', color:'text-green-600',  label:'واتساب',            ph:'+964 770 000 0000'},
+                                        {k:'contactEmail',    icon:'fa-envelope',           color:'text-blue-500',   label:'البريد الإلكتروني', ph:'team@example.com'},
+                                        {k:'contactOther',    icon:'fa-link',               color:'text-purple-500', label:'رابط آخر / موقع',   ph:'https://example.com'},
+                                    ].map(f=>(
                                         <div key={f.k}>
                                             <label className="text-xs font-black text-slate-600 flex items-center gap-1.5 mb-1.5">
                                                 <i className={`fa-solid ${f.icon} ${f.color}`}></i>{f.label}
                                             </label>
                                             <input type="text" className={inp} style={{fontFamily:"'Cairo',sans-serif"}}
-                                                placeholder={f.ph} value={form[f.k]} onChange={e => set(f.k, e.target.value)} />
+                                                placeholder={f.ph} value={form[f.k]} onChange={e=>set(f.k,e.target.value)}/>
                                         </div>
                                     ))}
                                     <p className="text-[10px] font-bold text-slate-400 pb-2"><i className="fa-solid fa-circle-info ml-1"></i>الحقول الفارغة لن تظهر للزوار</p>
@@ -2627,10 +2622,10 @@
                                     className="px-4 py-2.5 rounded-xl border-2 border-teal-200 text-teal-700 font-black text-sm hover:bg-teal-50 transition-colors flex items-center gap-1.5">
                                     <i className="fa-solid fa-arrow-up-right-from-square text-xs"></i>معاينة
                                 </a>
-                                <button onClick={handleSave} disabled={saving || !teamId}
-                                    className={`px-6 py-2.5 rounded-xl font-black text-sm text-white flex items-center gap-2 transition-all ${saving ? 'bg-slate-300 cursor-not-allowed' : 'bg-teal-600 hover:bg-teal-700 active:scale-95'}`}>
-                                    {saving ? <React.Fragment><i className="fa-solid fa-circle-notch fa-spin"></i>حفظ…</React.Fragment>
-                                            : <React.Fragment><i className="fa-solid fa-floppy-disk"></i>حفظ</React.Fragment>}
+                                <button onClick={handleSave} disabled={saving||!teamId}
+                                    className={`px-6 py-2.5 rounded-xl font-black text-sm text-white flex items-center gap-2 transition-all ${saving?'bg-slate-300 cursor-not-allowed':'bg-teal-600 hover:bg-teal-700 active:scale-95'}`}>
+                                    {saving?<React.Fragment><i className="fa-solid fa-circle-notch fa-spin"></i>حفظ…</React.Fragment>
+                                           :<React.Fragment><i className="fa-solid fa-floppy-disk"></i>حفظ</React.Fragment>}
                                 </button>
                             </div>
                         </div>
@@ -2639,17 +2634,19 @@
             );
         };
 
-        /* ══════════════════════════════════════════════════════════════
-           TeamPublicPage — الصفحة العامة للمفرزة (قراءة فقط)
-           تُفتح عند الرابط:  index.html?team=TEAM_ID
-        ══════════════════════════════════════════════════════════════ */
+        /* ══════════════════════════════════════════════════════════
+           TeamPublicPage — الصفحة العامة الاحترافية للمفرزة
+           تُفتح عند: index.html?team=TEAM_ID
+        ══════════════════════════════════════════════════════════ */
         const TeamPublicPage = ({ teamId }) => {
-            const [data, setData]     = useState(null);
-            const [status, setStatus] = useState('loading');
-            const [copied, setCopied] = useState(false);
+            const [profile, setProfile] = useState(null);
+            const [logo, setLogo]       = useState(null);
+            const [teamNameEn, setTeamNameEn] = useState('');
+            const [status, setStatus]   = useState('loading');
+            const [copied, setCopied]   = useState(false);
+            const [activeSection, setActiveSection] = useState(null);
 
             useEffect(() => {
-                // ← الإصلاح الرئيسي: إزالة overflow:hidden من الـ body
                 document.body.classList.add('public-page');
                 return () => document.body.classList.remove('public-page');
             }, []);
@@ -2657,12 +2654,20 @@
             useEffect(() => {
                 const load = async () => {
                     let t = 0;
-                    while ((!window.fb || !window.fb.db) && t++ < 40) await new Promise(r => setTimeout(r, 200));
+                    while ((!window.fb||!window.fb.db) && t++<40) await new Promise(r=>setTimeout(r,200));
                     if (!window.fb) { setStatus('error'); return; }
                     try {
-                        const snap = await window.fb.getDoc(window.fb.doc(window.fb.db, 'teamProfiles', teamId));
-                        if (!snap.exists()) { setStatus('error'); return; }
-                        setData(snap.data());
+                        // جلب بيانات الصفحة + شعار المفرزة معاً
+                        const [profSnap, cfgSnap] = await Promise.all([
+                            window.fb.getDoc(window.fb.doc(window.fb.db,'teamProfiles',teamId)),
+                            window.fb.getDoc(window.fb.doc(window.fb.db,`teams/${teamId}/config`,'main')),
+                        ]);
+                        if (!profSnap.exists()) { setStatus('error'); return; }
+                        setProfile(profSnap.data());
+                        if (cfgSnap.exists()) {
+                            setLogo(cfgSnap.data().logoUrl || null);
+                            setTeamNameEn(cfgSnap.data().teamNameEn || '');
+                        }
                         setStatus('ok');
                     } catch(e) { setStatus('error'); }
                 };
@@ -2670,156 +2675,532 @@
             }, [teamId]);
 
             const share = () => {
-                if (navigator.share) navigator.share({ title: data?.teamName, url: location.href });
-                else navigator.clipboard.writeText(location.href).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
+                if (navigator.share) navigator.share({title: profile?.teamName, url: location.href});
+                else navigator.clipboard.writeText(location.href).then(()=>{ setCopied(true); setTimeout(()=>setCopied(false),2000); });
             };
 
-            const css = `
-                @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
-                .tp-page { min-height:100vh; background:#f8fafc; font-family:'Cairo',sans-serif; color:#1e293b; }
-                .tp-hero { background:linear-gradient(145deg,#0a4f4a 0%,#0f766e 50%,#0e4d7b 100%); padding:52px 20px 80px; text-align:center; position:relative; overflow:hidden; }
-                .tp-hero-pattern { position:absolute; inset:0; background-image:repeating-linear-gradient(45deg,transparent,transparent 30px,rgba(255,255,255,.02) 30px,rgba(255,255,255,.02) 31px); }
-                .tp-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.22); color:#99f6e4; font-size:11px; font-weight:700; padding:5px 14px; border-radius:999px; margin-bottom:20px; }
-                .tp-avatar { width:88px; height:88px; border-radius:22px; background:rgba(255,255,255,.18); border:3px solid rgba(255,255,255,.32); display:flex; align-items:center; justify-content:center; font-size:38px; color:white; margin:0 auto 18px; box-shadow:0 8px 32px rgba(0,0,0,.22); }
-                .tp-h1 { font-size:clamp(20px,5vw,30px); font-weight:900; color:white; margin:0 0 6px; }
-                .tp-sub { color:rgba(255,255,255,.55); font-size:12px; font-weight:600; margin:0; }
-                .tp-wave { display:block; width:100%; height:44px; background:#f8fafc; clip-path:ellipse(55% 100% at 50% 100%); }
-                .tp-content { max-width:660px; margin:-32px auto 0; padding:0 16px 80px; }
-                .tp-card { background:white; border-radius:20px; border:1px solid #e2e8f0; overflow:hidden; margin-bottom:14px; box-shadow:0 2px 12px rgba(0,0,0,.05); animation:tpFadeUp .4s ease both; }
-                .tp-card-hdr { display:flex; align-items:center; gap:12px; padding:14px 18px; border-bottom:1px solid #f1f5f9; }
-                .tp-icon { width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
-                .tp-card-ttl { font-size:14px; font-weight:800; color:#1e293b; }
-                .tp-card-bdy { padding:16px 18px; }
-                .tp-text { font-size:13px; font-weight:600; color:#475569; line-height:2; white-space:pre-wrap; margin:0; }
-                .tp-goal { display:flex; align-items:flex-start; gap:10px; font-size:13px; font-weight:600; color:#475569; line-height:1.7; margin-bottom:10px; }
-                .tp-goal-dot { width:20px; height:20px; border-radius:50%; background:#ccfbf1; color:#0f766e; font-size:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; }
-                .tp-contact { display:flex; align-items:center; gap:12px; padding:11px 14px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0; text-decoration:none; margin-bottom:8px; }
-                .tp-contact:hover { background:#f1f5f9; }
-                .tp-c-icon { width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
-                .tp-c-label { font-size:10px; font-weight:700; color:#64748b; margin-bottom:1px; }
-                .tp-c-val { font-size:13px; font-weight:700; color:#1e293b; }
-                .tp-footer { text-align:center; padding:8px 16px 32px; font-size:11px; font-weight:700; color:#94a3b8; }
-                .tp-share { position:fixed; bottom:20px; left:20px; background:#0f766e; color:white; border:none; border-radius:50px; padding:12px 20px; font-family:'Cairo',sans-serif; font-size:13px; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 8px 24px rgba(15,118,110,.4); z-index:100; }
-                .tp-share:hover { background:#0d5c56; }
-                .tp-toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:#1e293b; color:white; padding:10px 20px; border-radius:50px; font-size:13px; font-weight:700; z-index:200; white-space:nowrap; font-family:'Cairo',sans-serif; }
-                @keyframes tpFadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+            const CSS = `
+                @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Rajdhani:wght@600;700&display=swap');
+
+                *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+                .tp { 
+                    min-height: 100vh; 
+                    background: #080e1a; 
+                    font-family: 'Tajawal', sans-serif; 
+                    color: #e2e8f0;
+                    direction: rtl;
+                }
+
+                /* ── HERO ── */
+                .tp-hero {
+                    position: relative;
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 60px 24px 80px;
+                    overflow: hidden;
+                    text-align: center;
+                }
+
+                /* خلفية شبكية */
+                .tp-grid-bg {
+                    position: absolute; inset: 0;
+                    background-image: 
+                        linear-gradient(rgba(0,200,160,.06) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,200,160,.06) 1px, transparent 1px);
+                    background-size: 48px 48px;
+                }
+
+                /* توهج مركزي */
+                .tp-glow {
+                    position: absolute;
+                    top: -20%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 700px;
+                    height: 700px;
+                    background: radial-gradient(ellipse, rgba(15,118,110,.35) 0%, transparent 65%);
+                    pointer-events: none;
+                }
+
+                /* خط ذهبي ديكوري */
+                .tp-line-top {
+                    position: absolute;
+                    top: 0; left: 0; right: 0;
+                    height: 3px;
+                    background: linear-gradient(90deg, transparent, #0fb489, #d4af37, #0fb489, transparent);
+                }
+
+                /* شعار المفرزة */
+                .tp-logo-wrap {
+                    position: relative;
+                    width: 120px; height: 120px;
+                    margin: 0 auto 28px;
+                    animation: heroIn .7s cubic-bezier(.16,1,.3,1) .1s both;
+                }
+                .tp-logo-ring {
+                    position: absolute; inset: -8px;
+                    border-radius: 50%;
+                    border: 1.5px solid rgba(212,175,55,.4);
+                    animation: spinSlow 12s linear infinite;
+                }
+                .tp-logo-ring::before {
+                    content: '';
+                    position: absolute;
+                    top: -3px; left: 50%;
+                    transform: translateX(-50%);
+                    width: 6px; height: 6px;
+                    border-radius: 50%;
+                    background: #d4af37;
+                    box-shadow: 0 0 8px #d4af37;
+                }
+                .tp-logo-img {
+                    width: 120px; height: 120px;
+                    border-radius: 28px;
+                    object-fit: cover;
+                    border: 2px solid rgba(255,255,255,.12);
+                    box-shadow: 0 0 40px rgba(15,118,110,.5), 0 20px 40px rgba(0,0,0,.4);
+                }
+                .tp-logo-fallback {
+                    width: 120px; height: 120px;
+                    border-radius: 28px;
+                    background: linear-gradient(135deg, #0f4c40, #0f766e);
+                    border: 2px solid rgba(255,255,255,.12);
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 52px;
+                    box-shadow: 0 0 40px rgba(15,118,110,.5), 0 20px 40px rgba(0,0,0,.4);
+                }
+
+                /* شارة النظام */
+                .tp-system-badge {
+                    display: inline-flex; align-items: center; gap: 8px;
+                    background: rgba(15,118,110,.15);
+                    border: 1px solid rgba(15,118,110,.4);
+                    color: #5eead4;
+                    font-size: 11px; font-weight: 700;
+                    padding: 5px 16px; border-radius: 999px;
+                    margin-bottom: 20px;
+                    letter-spacing: 1px; text-transform: uppercase;
+                    font-family: 'Rajdhani', sans-serif;
+                    animation: heroIn .7s ease .05s both;
+                }
+                .tp-system-badge::before {
+                    content: ''; width: 6px; height: 6px;
+                    border-radius: 50%; background: #0fb489;
+                    box-shadow: 0 0 6px #0fb489;
+                    animation: pulse 2s ease infinite;
+                }
+
+                .tp-team-name {
+                    font-size: clamp(28px, 7vw, 52px);
+                    font-weight: 900;
+                    color: #ffffff;
+                    line-height: 1.15;
+                    letter-spacing: -.5px;
+                    margin-bottom: 8px;
+                    animation: heroIn .7s ease .2s both;
+                }
+                .tp-team-name-en {
+                    font-family: 'Rajdhani', sans-serif;
+                    font-size: clamp(13px, 2.5vw, 18px);
+                    font-weight: 600;
+                    color: rgba(255,255,255,.35);
+                    text-transform: uppercase;
+                    letter-spacing: 3px;
+                    margin-bottom: 24px;
+                    animation: heroIn .7s ease .25s both;
+                }
+
+                /* خط فاصل ذهبي */
+                .tp-divider {
+                    width: 80px; height: 2px;
+                    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+                    margin: 0 auto 24px;
+                    animation: heroIn .7s ease .3s both;
+                }
+
+                .tp-updated {
+                    font-size: 12px; font-weight: 500;
+                    color: rgba(255,255,255,.3);
+                    animation: heroIn .7s ease .35s both;
+                }
+
+                /* سكرول إندكيتر */
+                .tp-scroll-hint {
+                    position: absolute; bottom: 30px; left: 50%;
+                    transform: translateX(-50%);
+                    display: flex; flex-direction: column; align-items: center; gap: 6px;
+                    opacity: .4; animation: bounce 2s ease infinite;
+                }
+                .tp-scroll-hint span { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-family: 'Rajdhani', sans-serif; }
+
+                /* ── CONTENT ── */
+                .tp-content {
+                    background: #0d1525;
+                    position: relative;
+                }
+                .tp-content::before {
+                    content: '';
+                    position: absolute; top: 0; left: 0; right: 0;
+                    height: 1px;
+                    background: linear-gradient(90deg, transparent, rgba(212,175,55,.3), transparent);
+                }
+
+                .tp-section-wrap {
+                    max-width: 720px;
+                    margin: 0 auto;
+                    padding: 0 20px 80px;
+                }
+
+                /* ── CARD ── */
+                .tp-card {
+                    background: rgba(255,255,255,.03);
+                    border: 1px solid rgba(255,255,255,.07);
+                    border-radius: 20px;
+                    overflow: hidden;
+                    margin-bottom: 16px;
+                    opacity: 0;
+                    transform: translateY(24px);
+                    transition: opacity .6s ease, transform .6s ease, border-color .3s ease;
+                }
+                .tp-card.visible { opacity: 1; transform: translateY(0); }
+                .tp-card:hover { border-color: rgba(15,118,110,.35); }
+
+                .tp-card-hdr {
+                    display: flex; align-items: center; gap: 14px;
+                    padding: 18px 22px 16px;
+                    border-bottom: 1px solid rgba(255,255,255,.05);
+                }
+                .tp-card-icon {
+                    width: 42px; height: 42px;
+                    border-radius: 12px;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 17px; flex-shrink: 0;
+                }
+                .tp-card-label {
+                    font-size: 11px; font-weight: 700;
+                    text-transform: uppercase; letter-spacing: 1.5px;
+                    font-family: 'Rajdhani', sans-serif;
+                    margin-bottom: 2px;
+                }
+                .tp-card-ttl {
+                    font-size: 17px; font-weight: 800; color: #f1f5f9;
+                }
+                .tp-card-bdy { padding: 20px 22px; }
+                .tp-card-text {
+                    font-size: 15px; font-weight: 500;
+                    color: #94a3b8; line-height: 2;
+                    white-space: pre-wrap;
+                }
+
+                /* ── GOALS ── */
+                .tp-goal {
+                    display: flex; align-items: flex-start; gap: 14px;
+                    padding: 12px 0;
+                    border-bottom: 1px solid rgba(255,255,255,.04);
+                }
+                .tp-goal:last-child { border-bottom: none; }
+                .tp-goal-num {
+                    width: 28px; height: 28px; border-radius: 8px;
+                    background: rgba(15,118,110,.2);
+                    border: 1px solid rgba(15,118,110,.4);
+                    color: #5eead4;
+                    font-size: 12px; font-weight: 800;
+                    font-family: 'Rajdhani', sans-serif;
+                    display: flex; align-items: center; justify-content: center;
+                    flex-shrink: 0; margin-top: 2px;
+                }
+                .tp-goal-text {
+                    font-size: 15px; font-weight: 500;
+                    color: #94a3b8; line-height: 1.7;
+                }
+
+                /* ── CONTACT ── */
+                .tp-contact-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                    gap: 10px;
+                }
+                .tp-contact-btn {
+                    display: flex; align-items: center; gap: 14px;
+                    padding: 14px 16px;
+                    background: rgba(255,255,255,.03);
+                    border: 1px solid rgba(255,255,255,.07);
+                    border-radius: 14px;
+                    text-decoration: none;
+                    transition: all .25s ease;
+                    cursor: pointer;
+                }
+                .tp-contact-btn:hover {
+                    background: rgba(15,118,110,.12);
+                    border-color: rgba(15,118,110,.4);
+                    transform: translateY(-2px);
+                }
+                .tp-c-icon {
+                    width: 40px; height: 40px; border-radius: 11px;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 16px; flex-shrink: 0;
+                }
+                .tp-c-lbl { font-size: 10px; font-weight: 700; color: #475569; margin-bottom: 2px; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: .5px; }
+                .tp-c-val { font-size: 14px; font-weight: 700; color: #e2e8f0; }
+
+                /* ── FOOTER ── */
+                .tp-footer {
+                    text-align: center;
+                    padding: 20px;
+                    border-top: 1px solid rgba(255,255,255,.05);
+                    font-size: 12px; font-weight: 500;
+                    color: rgba(255,255,255,.2);
+                    font-family: 'Rajdhani', sans-serif;
+                    letter-spacing: 1px;
+                }
+                .tp-footer strong { color: #0fb489; }
+
+                /* ── شارة العلوية ── */
+                .tp-section-tag {
+                    display: inline-flex; align-items: center; gap: 6px;
+                    background: rgba(212,175,55,.08);
+                    border: 1px solid rgba(212,175,55,.25);
+                    color: #d4af37;
+                    font-size: 9px; font-weight: 700;
+                    padding: 3px 10px; border-radius: 999px;
+                    text-transform: uppercase; letter-spacing: 1.5px;
+                    font-family: 'Rajdhani', sans-serif;
+                    margin-bottom: 8px; display: inline-flex;
+                }
+
+                /* ── زر المشاركة ── */
+                .tp-share-btn {
+                    position: fixed; bottom: 24px; left: 24px;
+                    background: linear-gradient(135deg, #0f766e, #0e4d7b);
+                    color: white; border: none;
+                    border: 1px solid rgba(255,255,255,.15);
+                    border-radius: 50px; padding: 13px 22px;
+                    font-family: 'Tajawal', sans-serif;
+                    font-size: 14px; font-weight: 800;
+                    cursor: pointer; display: flex; align-items: center; gap: 8px;
+                    box-shadow: 0 8px 32px rgba(15,118,110,.5);
+                    z-index: 100;
+                    transition: transform .2s, box-shadow .2s;
+                }
+                .tp-share-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(15,118,110,.6); }
+
+                .tp-toast {
+                    position: fixed; bottom: 80px; left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(15,118,110,.95);
+                    backdrop-filter: blur(12px);
+                    color: white; padding: 11px 24px;
+                    border-radius: 50px; font-size: 13px; font-weight: 700;
+                    z-index: 200; white-space: nowrap;
+                    font-family: 'Tajawal', sans-serif;
+                    border: 1px solid rgba(255,255,255,.2);
+                    box-shadow: 0 8px 32px rgba(0,0,0,.3);
+                }
+
+                /* ── Animations ── */
+                @keyframes heroIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+                @keyframes spinSlow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+                @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+                @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+
+                /* ── Loading / Error ── */
+                .tp-state {
+                    min-height: 100vh; display: flex; flex-direction: column;
+                    align-items: center; justify-content: center;
+                    gap: 20px; text-align: center; padding: 32px;
+                    background: #080e1a; font-family: 'Tajawal', sans-serif;
+                }
+                .tp-state-icon {
+                    width: 90px; height: 90px; border-radius: 24px;
+                    display: flex; align-items: center; justify-content: center; font-size: 36px;
+                }
             `;
 
-            if (status === 'loading') return (
-                <div className="tp-page" style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:16}}>
-                    <style>{css}</style>
-                    <i className="fa-solid fa-stethoscope fa-spin" style={{fontSize:40,color:'#0f766e'}}></i>
-                    <p style={{fontWeight:700,color:'#64748b',fontFamily:"'Cairo',sans-serif"}}>جاري التحميل…</p>
+            if (status==='loading') return (
+                <div className="tp-state">
+                    <style>{CSS}</style>
+                    <div className="tp-state-icon" style={{background:'rgba(15,118,110,.15)',border:'1px solid rgba(15,118,110,.3)'}}>
+                        <i className="fa-solid fa-stethoscope" style={{color:'#0fb489',animation:'pulse 1.2s ease infinite'}}></i>
+                    </div>
+                    <p style={{fontWeight:700,color:'#475569',fontSize:15}}>جاري تحميل بيانات المفرزة…</p>
                 </div>
             );
 
-            if (status === 'error') return (
-                <div className="tp-page" style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:16,textAlign:'center',padding:32}}>
-                    <style>{css}</style>
-                    <div style={{width:80,height:80,borderRadius:24,background:'#ffe4e6',display:'flex',alignItems:'center',justifyContent:'center',fontSize:32}}>
+            if (status==='error') return (
+                <div className="tp-state">
+                    <style>{CSS}</style>
+                    <div className="tp-state-icon" style={{background:'rgba(190,18,60,.1)',border:'1px solid rgba(190,18,60,.3)'}}>
                         <i className="fa-solid fa-triangle-exclamation" style={{color:'#be123c'}}></i>
                     </div>
-                    <h2 style={{fontWeight:900,fontSize:20,color:'#1e293b',fontFamily:"'Cairo',sans-serif"}}>الصفحة غير موجودة</h2>
-                    <p style={{fontWeight:600,color:'#64748b',maxWidth:280,lineHeight:1.8,fontFamily:"'Cairo',sans-serif"}}>لم يتم العثور على بيانات هذه المفرزة. تأكد من صحة الرابط.</p>
+                    <h2 style={{fontWeight:900,fontSize:22,color:'#f1f5f9'}}>الصفحة غير موجودة</h2>
+                    <p style={{fontWeight:500,color:'#475569',maxWidth:280,lineHeight:1.8,fontSize:14}}>لم يتم العثور على بيانات هذه المفرزة. تأكد من صحة الرابط.</p>
                 </div>
             );
 
-            const goals    = (data.goals||'').split('\n').map(l=>l.trim()).filter(Boolean);
+            const goals = (profile.goals||'').split('\n').map(l=>l.trim()).filter(Boolean);
             const contacts = [
-                {icon:'fa-phone',              bg:'#dcfce7',color:'#16a34a',label:'الهاتف',        val:data.contactPhone,    href:`tel:${data.contactPhone}`},
-                {icon:'fa-brands fa-telegram', bg:'#e0f2fe',color:'#0284c7',label:'تيليغرام',      val:data.contactTelegram, href:(data.contactTelegram||'').startsWith('http')?data.contactTelegram:`https://t.me/${(data.contactTelegram||'').replace('@','')}`},
-                {icon:'fa-brands fa-whatsapp', bg:'#dcfce7',color:'#15803d',label:'واتساب',        val:data.contactWhatsapp, href:`https://wa.me/${(data.contactWhatsapp||'').replace(/\D/g,'')}`},
-                {icon:'fa-envelope',           bg:'#dbeafe',color:'#2563eb',label:'البريد',         val:data.contactEmail,    href:`mailto:${data.contactEmail}`},
-                {icon:'fa-link',               bg:'#f3e8ff',color:'#7c3aed',label:'رابط آخر',       val:data.contactOther,    href:(data.contactOther||'').startsWith('http')?data.contactOther:`https://${data.contactOther}`},
-            ].filter(c => c.val && c.val.trim());
+                {icon:'fa-phone',              bg:'rgba(22,163,74,.12)',  border:'rgba(22,163,74,.3)',   iconBg:'rgba(22,163,74,.15)',  iconColor:'#4ade80', label:'هاتف',     val:profile.contactPhone,    href:`tel:${profile.contactPhone}`},
+                {icon:'fa-brands fa-telegram', bg:'rgba(2,132,199,.12)', border:'rgba(2,132,199,.3)',   iconBg:'rgba(2,132,199,.15)',  iconColor:'#38bdf8', label:'تيليغرام', val:profile.contactTelegram, href:(profile.contactTelegram||'').startsWith('http')?profile.contactTelegram:`https://t.me/${(profile.contactTelegram||'').replace('@','')}`},
+                {icon:'fa-brands fa-whatsapp', bg:'rgba(21,128,61,.12)',  border:'rgba(21,128,61,.3)',   iconBg:'rgba(21,128,61,.15)',  iconColor:'#4ade80', label:'واتساب',   val:profile.contactWhatsapp, href:`https://wa.me/${(profile.contactWhatsapp||'').replace(/\D/g,'')}`},
+                {icon:'fa-envelope',           bg:'rgba(37,99,235,.12)',  border:'rgba(37,99,235,.3)',   iconBg:'rgba(37,99,235,.15)',  iconColor:'#60a5fa', label:'بريد',     val:profile.contactEmail,    href:`mailto:${profile.contactEmail}`},
+                {icon:'fa-link',               bg:'rgba(124,58,237,.12)', border:'rgba(124,58,237,.3)',  iconBg:'rgba(124,58,237,.15)', iconColor:'#a78bfa', label:'رابط',     val:profile.contactOther,    href:(profile.contactOther||'').startsWith('http')?profile.contactOther:`https://${profile.contactOther}`},
+            ].filter(c=>c.val&&c.val.trim());
 
-            const updatedAt = data.updatedAt ? new Date(data.updatedAt.seconds*1000).toLocaleDateString('ar-IQ',{year:'numeric',month:'long',day:'numeric'}) : '';
+            const updatedAt = profile.updatedAt ? new Date(profile.updatedAt.seconds*1000).toLocaleDateString('ar-IQ',{year:'numeric',month:'long',day:'numeric'}) : '';
+
+            // Intersection Observer للكروت
+            const cardRef = (el) => {
+                if (!el) return;
+                const obs = new IntersectionObserver(([e]) => { if(e.isIntersecting){ el.classList.add('visible'); obs.disconnect(); } }, {threshold:.15});
+                obs.observe(el);
+            };
 
             return (
-                <div className="tp-page">
-                    <style>{css}</style>
+                <div className="tp">
+                    <style>{CSS}</style>
 
+                    {/* ── HERO ── */}
                     <div className="tp-hero">
-                        <div className="tp-hero-pattern"></div>
-                        <div style={{position:'relative'}}>
-                            <div className="tp-badge"><i className="fa-solid fa-hospital-user"></i> MedOps — المفارز الطبية</div>
-                            <div className="tp-avatar"><i className="fa-solid fa-users-rectangle"></i></div>
-                            <h1 className="tp-h1">{data.teamName || 'الفريق الطبي'}</h1>
-                            {updatedAt && <p className="tp-sub">آخر تحديث: {updatedAt}</p>}
+                        <div className="tp-grid-bg"></div>
+                        <div className="tp-glow"></div>
+                        <div className="tp-line-top"></div>
+
+                        <div style={{position:'relative',zIndex:2,width:'100%'}}>
+                            <div className="tp-system-badge">
+                                <i className="fa-solid fa-hospital-user"></i>
+                                MedOps · Medical Field Operations
+                            </div>
+
+                            <div className="tp-logo-wrap">
+                                <div className="tp-logo-ring"></div>
+                                {logo
+                                    ? <img src={logo} className="tp-logo-img" alt="logo"/>
+                                    : <div className="tp-logo-fallback"><i className="fa-solid fa-shield-halved" style={{color:'rgba(255,255,255,.8)'}}></i></div>
+                                }
+                            </div>
+
+                            <h1 className="tp-team-name">{profile.teamName||'الفريق الطبي'}</h1>
+                            {teamNameEn && <p className="tp-team-name-en">{teamNameEn}</p>}
+                            <div className="tp-divider"></div>
+                            {updatedAt && <p className="tp-updated">آخر تحديث: {updatedAt}</p>}
+                        </div>
+
+                        <div className="tp-scroll-hint">
+                            <i className="fa-solid fa-chevron-down" style={{fontSize:14,color:'rgba(255,255,255,.4)'}}></i>
+                            <span>scroll</span>
                         </div>
                     </div>
-                    <div className="tp-wave"></div>
 
+                    {/* ── CONTENT ── */}
                     <div className="tp-content">
-                        {data.whoWeAre && (
-                            <div className="tp-card" style={{animationDelay:'.05s'}}>
-                                <div className="tp-card-hdr">
-                                    <div className="tp-icon" style={{background:'#ccfbf1',color:'#0f766e'}}><i className="fa-solid fa-id-card-clip"></i></div>
-                                    <span className="tp-card-ttl">من نحن</span>
-                                </div>
-                                <div className="tp-card-bdy"><p className="tp-text">{data.whoWeAre}</p></div>
-                            </div>
-                        )}
-                        {data.vision && (
-                            <div className="tp-card" style={{animationDelay:'.10s'}}>
-                                <div className="tp-card-hdr">
-                                    <div className="tp-icon" style={{background:'#dbeafe',color:'#1d4ed8'}}><i className="fa-solid fa-eye"></i></div>
-                                    <span className="tp-card-ttl">رؤيتنا</span>
-                                </div>
-                                <div className="tp-card-bdy"><p className="tp-text">{data.vision}</p></div>
-                            </div>
-                        )}
-                        {goals.length > 0 && (
-                            <div className="tp-card" style={{animationDelay:'.15s'}}>
-                                <div className="tp-card-hdr">
-                                    <div className="tp-icon" style={{background:'#fef3c7',color:'#b45309'}}><i className="fa-solid fa-bullseye"></i></div>
-                                    <span className="tp-card-ttl">أهدافنا</span>
-                                </div>
-                                <div className="tp-card-bdy">
-                                    {goals.map((g,i) => (
-                                        <div key={i} className="tp-goal">
-                                            <div className="tp-goal-dot"><i className="fa-solid fa-check" style={{fontSize:8}}></i></div>
-                                            <span>{g}</span>
+                        <div className="tp-section-wrap" style={{paddingTop:48}}>
+
+                            {profile.whoWeAre && (
+                                <div className="tp-card" ref={cardRef}>
+                                    <div className="tp-card-hdr">
+                                        <div className="tp-card-icon" style={{background:'rgba(15,118,110,.15)',border:'1px solid rgba(15,118,110,.3)'}}>
+                                            <i className="fa-solid fa-id-card-clip" style={{color:'#5eead4'}}></i>
                                         </div>
-                                    ))}
+                                        <div>
+                                            <div className="tp-card-label" style={{color:'#0fb489'}}>About</div>
+                                            <div className="tp-card-ttl">من نحن</div>
+                                        </div>
+                                    </div>
+                                    <div className="tp-card-bdy">
+                                        <p className="tp-card-text">{profile.whoWeAre}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                        {contacts.length > 0 && (
-                            <div className="tp-card" style={{animationDelay:'.20s'}}>
-                                <div className="tp-card-hdr">
-                                    <div className="tp-icon" style={{background:'#ffe4e6',color:'#be123c'}}><i className="fa-solid fa-address-book"></i></div>
-                                    <span className="tp-card-ttl">تواصل معنا</span>
+                            )}
+
+                            {profile.vision && (
+                                <div className="tp-card" ref={cardRef} style={{transitionDelay:'.1s'}}>
+                                    <div className="tp-card-hdr">
+                                        <div className="tp-card-icon" style={{background:'rgba(37,99,235,.12)',border:'1px solid rgba(37,99,235,.3)'}}>
+                                            <i className="fa-solid fa-eye" style={{color:'#60a5fa'}}></i>
+                                        </div>
+                                        <div>
+                                            <div className="tp-card-label" style={{color:'#60a5fa'}}>Vision</div>
+                                            <div className="tp-card-ttl">رؤيتنا</div>
+                                        </div>
+                                    </div>
+                                    <div className="tp-card-bdy">
+                                        <p className="tp-card-text">{profile.vision}</p>
+                                    </div>
                                 </div>
-                                <div className="tp-card-bdy">
-                                    {contacts.map((c,i) => (
-                                        <a key={i} href={c.href} target="_blank" rel="noopener noreferrer" className="tp-contact">
-                                            <div className="tp-c-icon" style={{background:c.bg,color:c.color}}><i className={`fa-solid ${c.icon}`}></i></div>
-                                            <div><div className="tp-c-label">{c.label}</div><div className="tp-c-val">{c.val}</div></div>
-                                            <i className="fa-solid fa-chevron-left" style={{marginRight:'auto',color:'#cbd5e1',fontSize:11}}></i>
-                                        </a>
-                                    ))}
+                            )}
+
+                            {goals.length>0 && (
+                                <div className="tp-card" ref={cardRef} style={{transitionDelay:'.2s'}}>
+                                    <div className="tp-card-hdr">
+                                        <div className="tp-card-icon" style={{background:'rgba(212,175,55,.1)',border:'1px solid rgba(212,175,55,.3)'}}>
+                                            <i className="fa-solid fa-bullseye" style={{color:'#d4af37'}}></i>
+                                        </div>
+                                        <div>
+                                            <div className="tp-card-label" style={{color:'#d4af37'}}>Goals</div>
+                                            <div className="tp-card-ttl">أهدافنا</div>
+                                        </div>
+                                    </div>
+                                    <div className="tp-card-bdy">
+                                        {goals.map((g,i)=>(
+                                            <div key={i} className="tp-goal">
+                                                <div className="tp-goal-num">{String(i+1).padStart(2,'0')}</div>
+                                                <p className="tp-goal-text">{g}</p>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+
+                            {contacts.length>0 && (
+                                <div className="tp-card" ref={cardRef} style={{transitionDelay:'.3s'}}>
+                                    <div className="tp-card-hdr">
+                                        <div className="tp-card-icon" style={{background:'rgba(190,18,60,.1)',border:'1px solid rgba(190,18,60,.3)'}}>
+                                            <i className="fa-solid fa-address-book" style={{color:'#fb7185'}}></i>
+                                        </div>
+                                        <div>
+                                            <div className="tp-card-label" style={{color:'#fb7185'}}>Contact</div>
+                                            <div className="tp-card-ttl">تواصل معنا</div>
+                                        </div>
+                                    </div>
+                                    <div className="tp-card-bdy">
+                                        <div className="tp-contact-grid">
+                                            {contacts.map((c,i)=>(
+                                                <a key={i} href={c.href} target="_blank" rel="noopener noreferrer" className="tp-contact-btn">
+                                                    <div className="tp-c-icon" style={{background:c.iconBg,border:`1px solid ${c.border}`,color:c.iconColor}}>
+                                                        <i className={`fa-solid ${c.icon}`}></i>
+                                                    </div>
+                                                    <div style={{overflow:'hidden'}}>
+                                                        <div className="tp-c-lbl">{c.label}</div>
+                                                        <div className="tp-c-val" style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{c.val}</div>
+                                                    </div>
+                                                </a>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                        </div>
+
+                        <div className="tp-footer">
+                            POWERED BY <strong>MEDOPS</strong> · MEDICAL FIELD OPERATIONS SYSTEM
+                        </div>
                     </div>
 
-                    <div className="tp-footer">
-                        <i className="fa-solid fa-heart" style={{color:'#f43f5e',fontSize:10,marginLeft:4}}></i>
-                        مدعوم بواسطة <span style={{color:'#0f766e',fontWeight:900}}>MedOps</span>
-                    </div>
-
-                    <button className="tp-share" onClick={share}>
+                    <button className="tp-share-btn" onClick={share}>
                         <i className="fa-solid fa-share-nodes"></i> مشاركة
                     </button>
-                    {copied && <div className="tp-toast">تم نسخ الرابط ✓</div>}
+                    {copied && <div className="tp-toast">✓ تم نسخ الرابط</div>}
                 </div>
             );
         };
 
         /* ══ Smart Router ══ */
         const teamParam = new URLSearchParams(location.search).get('team');
-
         const root = ReactDOM.createRoot(document.getElementById('root'));
         if (teamParam) {
             root.render(<TeamPublicPage teamId={teamParam} />);
