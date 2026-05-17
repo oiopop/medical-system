@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منظومة الإدارة الميدانية - الإدارة المركزية</title>
+    <title>منظومة الإدارة التسجيلية - الإدارة المركزية</title>
     <meta name="theme-color" content="#0f766e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -878,8 +878,8 @@ const auth = getAuth(app);
                                 <div className="w-20 h-20 bg-slate-900 rounded-2xl text-white flex items-center justify-center mx-auto mb-4 shadow-lg border-2 border-slate-700 overflow-hidden">
                                     <i className="fa-solid fa-layer-group text-4xl"></i>
                                 </div>
-                                <h1 className="text-2xl font-black text-slate-900">نظام الإدارة الميدانية</h1>
-                                <p className="text-xs font-bold text-slate-500 mt-1 uppercase tracking-widest">Volunteer Access Portal</p>
+                                <h1 className="text-2xl font-black text-slate-900">نظام التسجيل وإدارة المتطوعين</h1>
+                                <p className="text-xs font-bold text-slate-500 mt-1 uppercase tracking-widest">Registration Access Portal</p>
                             </div>
 
                             <div className="grid grid-cols-1 lg:grid-cols-[220px,1fr] gap-6">
@@ -1031,7 +1031,7 @@ const auth = getAuth(app);
                             <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 shrink-0 sticky top-0 z-30 shadow-sm">
                                 <div className="flex items-center gap-4">
                                     <button onClick={() => setIsSidebarOpen(true)} className="lg:hidden p-1.5 text-slate-500 hover:bg-slate-100 rounded-lg"><i className="fa-solid fa-bars text-xl"></i></button>
-                                    <h2 className="font-black text-slate-800 text-lg flex items-center gap-2"><i className="fa-solid fa-shield-halved text-indigo-600"></i> لوحة التحكم المركزية (Master Admin)</h2>
+                                    <h2 className="font-black text-slate-800 text-lg flex items-center gap-2"><i className="fa-solid fa-shield-halved text-indigo-600"></i> لوحة الإدارة المركزية</h2>
                                 </div>
                             </header>
 
@@ -1126,24 +1126,15 @@ const auth = getAuth(app);
 
                             {isAdmin ? (
                                 <React.Fragment>
-                                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2 mt-6">إدارة الميدان</div>
-                                    <button onClick={() => { setActiveTab('dashboard'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'dashboard' ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-chart-pie w-5 text-center"></i> <span className="text-sm">لوحة القيادة</span></button>
-                                    <button onClick={() => { setActiveTab('volunteers'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'volunteers' ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-users w-5 text-center"></i> <span className="text-sm">سجل الكادر</span></button>
+                                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2 mt-6">إدارة التسجيل</div>
+                                    <button onClick={() => { setActiveTab('dashboard'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'dashboard' ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-chart-pie w-5 text-center"></i> <span className="text-sm">لوحة التسجيل</span></button>
+                                    <button onClick={() => { setActiveTab('volunteers'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'volunteers' ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-users w-5 text-center"></i> <span className="text-sm">طلبات وسجل الكادر</span></button>
                                     <button onClick={() => { setActiveTab('badges'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'badges' ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-id-badge w-5 text-center"></i> <span className="text-sm">إصدار الهويات</span></button>
-                                    <button onClick={() => { setActiveTab('inventory'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'inventory' ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-box-open w-5 text-center"></i> <span className="text-sm">إدارة المخزون</span></button>
-                                    
-                                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2 mt-6">النشاط الخيري والتنافس</div>
-                                    <button onClick={() => { setActiveTab('leaderboard'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'leaderboard' ? 'bg-amber-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-trophy w-5 text-center"></i> <span className="text-sm">لوحة الشرف</span></button>
-                                    <button onClick={() => { setActiveTab('activities'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'activities' ? 'bg-emerald-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-award w-5 text-center"></i> <span className="text-sm">نشاطات ميدانية</span></button>
-                                    <button onClick={() => { setActiveTab('donations'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'donations' ? 'bg-emerald-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-hand-holding-heart w-5 text-center"></i> <span className="text-sm">صندوق التبرعات</span></button>
                                 </React.Fragment>
                             ) : (
                                 <React.Fragment>
                                     <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2 mt-6">مساحتي الخاصة</div>
-                                    <button onClick={() => { setActiveTab('my_badge'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'my_badge' ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-id-badge w-5 text-center"></i> <span className="text-sm">هويتي الرسمية</span></button>
-                                    <button onClick={() => { setActiveTab('my_attendance'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'my_attendance' ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-clipboard-list w-5 text-center"></i> <span className="text-sm">سجل حضوري</span></button>
-                                    <button onClick={() => { setActiveTab('services'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'services' ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-heart-pulse w-5 text-center"></i> <span className="text-sm">تسجيل حالة</span></button>
-                                    <button onClick={() => { setActiveTab('leaderboard'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'leaderboard' ? 'bg-amber-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-trophy w-5 text-center"></i> <span className="text-sm">لوحة الشرف</span></button>
+                                    <button onClick={() => { setActiveTab('my_badge'); setIsSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'my_badge' ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}><i className="fa-solid fa-id-badge w-5 text-center"></i> <span className="text-sm">هويتي وبياناتي</span></button>
                                 </React.Fragment>
                             )}
 
@@ -1307,25 +1298,25 @@ const auth = getAuth(app);
                                 <div className="space-y-6 animate-in fade-in duration-500">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                                         <div className="bg-white p-6 rounded-2xl border border-slate-200 flex items-center justify-between shadow-sm">
-                                            <div><p className="text-slate-500 text-xs font-bold mb-1">إجمالي الكادر</p><h4 className="text-2xl font-black text-slate-800">{volunteers.length}</h4></div>
+                                            <div><p className="text-slate-500 text-xs font-bold mb-1">إجمالي الطلبات والكادر</p><h4 className="text-2xl font-black text-slate-800">{volunteers.filter(v => v.role !== 'Admin').length}</h4></div>
                                             <div className="p-3 rounded-xl bg-blue-50 text-blue-600"><i className="fa-solid fa-users text-xl"></i></div>
                                         </div>
                                         <div className="bg-white p-6 rounded-2xl border border-slate-200 flex items-center justify-between shadow-sm">
-                                            <div><p className="text-slate-500 text-xs font-bold mb-1">الخدمات المسجلة</p><h4 className="text-2xl font-black text-slate-800">{services.length}</h4></div>
-                                            <div className="p-3 rounded-xl bg-emerald-50 text-emerald-600"><i className="fa-solid fa-heart-pulse text-xl"></i></div>
+                                            <div><p className="text-slate-500 text-xs font-bold mb-1">طلبات قيد المراجعة</p><h4 className="text-2xl font-black text-amber-600">{volunteers.filter(v => v.role !== 'Admin' && v.accountStatus === 'Pending').length}</h4></div>
+                                            <div className="p-3 rounded-xl bg-amber-50 text-amber-600"><i className="fa-solid fa-clock text-xl"></i></div>
                                         </div>
                                         <div className="bg-white p-6 rounded-2xl border border-slate-200 flex items-center justify-between shadow-sm">
-                                            <div><p className="text-slate-500 text-xs font-bold mb-1">نشاطات موثقة</p><h4 className="text-2xl font-black text-slate-800">{activities.length}</h4></div>
-                                            <div className="p-3 rounded-xl bg-amber-50 text-amber-600"><i className="fa-solid fa-award text-xl"></i></div>
+                                            <div><p className="text-slate-500 text-xs font-bold mb-1">الحسابات المعتمدة</p><h4 className="text-2xl font-black text-emerald-600">{volunteers.filter(v => v.role !== 'Admin' && (v.accountStatus === 'Approved' || !v.accountStatus)).length}</h4></div>
+                                            <div className="p-3 rounded-xl bg-emerald-50 text-emerald-600"><i className="fa-solid fa-check-circle text-xl"></i></div>
                                         </div>
                                         <div className="bg-white p-6 rounded-2xl border border-slate-200 flex items-center justify-between shadow-sm">
-                                            <div><p className="text-slate-500 text-xs font-bold mb-1">المواد الحرجة</p><h4 className="text-2xl font-black text-slate-800">{inventory.filter(i => i.current <= i.min).length}</h4></div>
-                                            <div className="p-3 rounded-xl bg-red-50 text-red-600"><i className="fa-solid fa-triangle-exclamation text-xl"></i></div>
+                                            <div><p className="text-slate-500 text-xs font-bold mb-1">طلبات مرفوضة/تعديل</p><h4 className="text-2xl font-black text-red-600">{volunteers.filter(v => v.role !== 'Admin' && (v.accountStatus === 'Rejected' || v.accountStatus === 'EditRequired')).length}</h4></div>
+                                            <div className="p-3 rounded-xl bg-red-50 text-red-600"><i className="fa-solid fa-user-xmark text-xl"></i></div>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                         <div className="bg-white rounded-[2rem] border border-slate-200 p-6 shadow-sm flex flex-col max-h-[400px]">
-                                            <h3 className="font-black text-slate-800 mb-4 flex items-center gap-2"><i className="fa-solid fa-map-marker-alt text-blue-600"></i> المتواجدون بالمفرزة حالياً (مباشر)</h3>
+                                            <h3 className="font-black text-slate-800 mb-4 flex items-center gap-2"><i className="fa-solid fa-map-marker-alt text-blue-600"></i> الكادر المسجل في هذه المفرزة</h3>
                                             <div className="space-y-3 overflow-y-auto pr-2 custom-scrollbar">
                                                 {volunteers.map(v => (
                                                 <div key={v.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
@@ -1340,7 +1331,7 @@ const auth = getAuth(app);
                                         </div>
                                         <div className="bg-slate-900 rounded-[2rem] p-6 md:p-8 text-white relative overflow-hidden flex flex-col shadow-xl">
                                             <div className="relative z-10 flex-1 flex flex-col">
-                                                <h3 className="text-xl font-black mb-1 flex items-center gap-2"><i className="fa-brands fa-telegram text-blue-400"></i> بث توجيه ميداني (تليكرام)</h3>
+                                                <h3 className="text-xl font-black mb-1 flex items-center gap-2"><i className="fa-brands fa-telegram text-blue-400"></i> ملاحظات الإدارة / Telegram</h3>
                                                 <p className="text-slate-400 text-xs mb-4 font-bold">رسالة عاجلة لكروب {config.generalGroupId || 'غير محدد'}</p>
                                                 <textarea className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none mb-4 flex-1 resize-none custom-scrollbar"></textarea>
                                                 <button onClick={() => {}} className="w-full bg-blue-600 py-3.5 rounded-xl font-black hover:bg-blue-700 shadow-lg">إرسال التوجيه</button>
@@ -1360,7 +1351,7 @@ const auth = getAuth(app);
                                         </div>
                                         <div className="flex gap-3 w-full sm:w-auto">
                                             <button onClick={() => setShowStaffTableModal(true)} className="flex-1 sm:flex-none bg-slate-100 text-slate-700 px-4 py-3 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-slate-200 border border-slate-200"><i className="fa-solid fa-table"></i> الجدول الإداري</button>
-                                            <button onClick={() => setShowAddVolModal(true)} className="flex-1 sm:flex-none bg-blue-600 text-white px-6 py-3 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-blue-700 shadow-md"><i className="fa-solid fa-user-plus"></i> تسجيل كادر جديد</button>
+                                            <button onClick={() => setShowAddVolModal(true)} className="flex-1 sm:flex-none bg-blue-600 text-white px-6 py-3 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-blue-700 shadow-md"><i className="fa-solid fa-user-plus"></i> إضافة حساب يدوي</button>
                                         </div>
                                     </div>
 
@@ -1647,14 +1638,6 @@ const auth = getAuth(app);
                                             <div className="w-14 h-7 bg-emerald-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-emerald-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-600"></div>
                                             <span className="mr-3 text-sm font-black text-emerald-900 w-20">{config.isServiceEnabled ? 'مُفعل' : 'مُتوقف'}</span>
                                         </label>
-                                    </div>
-
-                                    <div className="bg-amber-50 border border-amber-200 p-6 rounded-2xl shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
-                                        <div>
-                                            <h4 className="text-lg font-black text-amber-900 flex items-center gap-2"><i className="fa-solid fa-rotate-right"></i> تصفير عداد المنافسة (للتكريم)</h4>
-                                            <p className="text-xs font-bold text-amber-700 mt-1">يعيد النقاط للصفر لجميع المتطوعين لبدء مسابقة جديدة مع الاحتفاظ بالأرشيف.</p>
-                                        </div>
-                                        <button type="button" onClick={() => setShowZeroLeaderboardConfirm(true)} className="bg-amber-600 text-white px-5 py-3 rounded-xl font-black hover:bg-amber-700 shadow-md shrink-0"><i className="fa-solid fa-bolt"></i> تصفير العداد للجميع</button>
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -2020,26 +2003,9 @@ const auth = getAuth(app);
                                         </div>
                                     )}
                                     
-                                    <div className="grid grid-cols-3 gap-3 mb-6">
-                                        <div className="bg-blue-50 p-4 rounded-2xl text-center"><p className="text-[9px] font-black text-blue-600 uppercase mb-1">حالات طبية</p><h5 className="text-2xl font-black text-slate-900">{services.filter(s => s.user === adminViewingStats.name).length}</h5></div>
-                                        <div className="bg-amber-50 p-4 rounded-2xl text-center"><p className="text-[9px] font-black text-amber-600 uppercase mb-1">نشاطات</p><h5 className="text-2xl font-black text-slate-900">{activities.filter(s => s.volunteer === adminViewingStats.name).length}</h5></div>
-                                        <div className="bg-emerald-50 p-4 rounded-2xl text-center"><p className="text-[9px] font-black text-emerald-600 uppercase mb-1">مساهمات</p><h5 className="text-2xl font-black text-slate-900">{donations.filter(d => d.donor === adminViewingStats.name).length}</h5></div>
-                                    </div>
-
-                                    <div className="mb-6 bg-red-50 border border-red-100 rounded-2xl p-4 relative overflow-hidden">
-                                        <div className="flex justify-between items-center mb-3 border-b border-red-200/50 pb-2">
-                                            <h5 className="font-black text-red-700 text-sm"><i className="fa-solid fa-triangle-exclamation"></i> سجل الخصومات (العقوبات والتصفير)</h5>
-                                            <button onClick={() => setShowAddPenaltyModal(true)} className="bg-red-600 text-white text-[10px] font-black px-3 py-1.5 rounded-lg hover:bg-red-700 shadow-sm">+ تسجيل مخالفة</button>
-                                        </div>
-                                        <div className="space-y-2 max-h-40 overflow-y-auto custom-scrollbar pr-2">
-                                            {penalties.filter(p => p.volunteerId === adminViewingStats.id).map(p => (
-                                                <div key={p.id} className="flex justify-between items-center bg-white p-2 rounded-lg border border-red-100 text-xs">
-                                                    <span className="font-bold text-slate-700">{p.reason} <span className="text-[9px] text-slate-400 block">{p.date}</span></span>
-                                                    <span className="font-black text-red-600">-{p.points} نقطة</span>
-                                                </div>
-                                            ))}
-                                            {penalties.filter(p => p.volunteerId === adminViewingStats.id).length === 0 && <p className="text-xs text-center text-slate-400 font-bold py-2">لا توجد خصومات مسجلة.</p>}
-                                        </div>
+                                    <div className="grid grid-cols-2 gap-3 mb-6">
+                                        <div className="bg-blue-50 p-4 rounded-2xl text-center"><p className="text-[9px] font-black text-blue-600 uppercase mb-1">نوع الحساب</p><h5 className="text-sm font-black text-slate-900">{ROLE_CONFIG[adminViewingStats.role]?.label}</h5></div>
+                                        <div className="bg-emerald-50 p-4 rounded-2xl text-center"><p className="text-[9px] font-black text-emerald-600 uppercase mb-1">حالة التسجيل</p><h5 className="text-sm font-black text-slate-900">{adminViewingStats.accountStatus === 'Approved' ? 'معتمد' : adminViewingStats.accountStatus === 'Rejected' ? 'مرفوض' : adminViewingStats.accountStatus === 'EditRequired' ? 'تعديل مطلوب' : 'قيد المراجعة'}</h5></div>
                                     </div>
 
                                     <h5 className="font-black text-slate-800 text-sm mb-3 pt-2">سجل الحضور الأخير</h5>
